@@ -1,0 +1,23 @@
+name: Python package
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: azure/docker-login@v1
+      with:
+        login-server: contoso.azurecr.io
+        username: ${{ secrets.REGISTRY_USERNAME1 }}
+        password: ${{ secrets.REGISTRY_PASSWORD1 }}
+    
+    - run: |
+        docker build . -t contoso.azurecr.io/k8sdemo:${{ github.sha }}
+        docker push contoso.azurecr.io/k8sdemo:${{ github.sha }}
